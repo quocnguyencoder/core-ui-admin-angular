@@ -13,11 +13,12 @@ export const navItems: INavData[] = [
   {
     name: 'New page',
     url: '/new-page',
-    iconComponent: { name: 'cil-speedometer' },
-    badge: {
-      color: 'info',
-      text: 'NEW',
-    },
+    iconComponent: { name: 'cil-bell' },
+  },
+  {
+    name: 'User Management',
+    url: '/user-management',
+    iconComponent: { name: 'cil-user' },
   },
   {
     title: true,

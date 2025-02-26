@@ -1,0 +1,259 @@
+<c-row>
+  <c-col xs>
+    <c-card class="mb-4">
+      <c-card-body>
+        <button class="btn btn-primary mb-3" (click)="openAddUserModal()">
+          Add User
+        </button>
+        <table
+          [hover]="true"
+          [responsive]="true"
+          [striped]="true"
+          align="middle"
+          cTable
+          class="mb-0 border"
+        >
+          <thead class="text-nowrap text-truncate">
+            <tr>
+              <th class="bg-body-tertiary text-center">
+                <svg cIcon name="cilPeople"></svg>
+              </th>
+              <th class="bg-body-tertiary">User</th>
+              <th class="bg-body-tertiary text-center">Country</th>
+              <th class="bg-body-tertiary">Usage</th>
+              <th class="bg-body-tertiary text-center">Payment Method</th>
+              <th class="bg-body-tertiary">Activity</th>
+              <th class="bg-body-tertiary text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of users; trackBy: trackByUserName">
+              <td class="text-center">
+                <c-avatar
+                  [size]="'md'"
+                  [src]="user.avatar"
+                  [status]="user.status"
+                ></c-avatar>
+              </td>
+              <td>
+                <div>{{ user.name }}</div>
+                <div class="small text-body-secondary text-nowrap">
+                  <span>
+                    {{ user.state }} | Registered: {{ user.registered }}
+                  </span>
+                </div>
+              </td>
+              <td class="text-center">
+                <svg
+                  cIcon
+                  [id]="user.country + user.name"
+                  [name]="'cif' + user.country"
+                  size="xl"
+                  [title]="user.country"
+                ></svg>
+              </td>
+              <td>
+                <div class="d-flex justify-content-between">
+                  <div class="float-start">
+                    <strong>{{ user.usage }}%</strong>
+                  </div>
+                  <div class="float-end ms-1 text-nowrap">
+                    <small class="text-body-secondary">
+                      {{ user.period }}
+                    </small>
+                  </div>
+                </div>
+                <c-progress
+                  thin
+                  [value]="user.usage"
+                  [color]="user.color"
+                  aria-label="Usage"
+                ></c-progress>
+              </td>
+              <td class="text-center">
+                <svg cIcon [name]="'cibCc' + user.payment" size="xl"></svg>
+              </td>
+              <td>
+                <div class="small text-body-secondary">Last login</div>
+                <div class="fw-semibold text-nowrap">{{ user.activity }}</div>
+              </td>
+              <td class="text-center">
+                <div class="d-flex gap-2">
+                  <button
+                    class="btn btn-sm btn-warning"
+                    (click)="openEditUserModal(user)"
+                  >
+                    Edit
+                  </button>
+
+                  <button
+                    class="btn btn-sm btn-danger"
+                    (click)="openDeleteUserModal(user)"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>
+
+<!-- Add/Edit User Modal -->
+<c-modal [visible]="isModalOpen" (visibleChange)="handleModalChange($event)">
+  <c-modal-header>
+    <h5 cModalTitle>{{ isEditMode ? "Edit User" : "Add User" }}</h5>
+    <button (click)="closeModal()" cButtonClose></button>
+  </c-modal-header>
+  <c-modal-body>
+    <form (ngSubmit)="isEditMode ? updateUser() : addUser()">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input
+          type="text"
+          class="form-control"
+          id="name"
+          [(ngModel)]="currentUser.name"
+          name="name"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="state">State</label>
+        <input
+          type="text"
+          class="form-control"
+          id="state"
+          [(ngModel)]="currentUser.state"
+          name="state"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="registered">Registered</label>
+        <input
+          type="text"
+          class="form-control"
+          id="registered"
+          [(ngModel)]="currentUser.registered"
+          name="registered"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="country">Country</label>
+        <input
+          type="text"
+          class="form-control"
+          id="country"
+          [(ngModel)]="currentUser.country"
+          name="country"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="usage">Usage</label>
+        <input
+          type="number"
+          class="form-control"
+          id="usage"
+          [(ngModel)]="currentUser.usage"
+          name="usage"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="period">Period</label>
+        <input
+          type="text"
+          class="form-control"
+          id="period"
+          [(ngModel)]="currentUser.period"
+          name="period"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="payment">Payment Method</label>
+        <input
+          type="text"
+          class="form-control"
+          id="payment"
+          [(ngModel)]="currentUser.payment"
+          name="payment"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="activity">Activity</label>
+        <input
+          type="text"
+          class="form-control"
+          id="activity"
+          [(ngModel)]="currentUser.activity"
+          name="activity"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="avatar">Avatar</label>
+        <input
+          type="text"
+          class="form-control"
+          id="avatar"
+          [(ngModel)]="currentUser.avatar"
+          name="avatar"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="status">Status</label>
+        <input
+          type="text"
+          class="form-control"
+          id="status"
+          [(ngModel)]="currentUser.status"
+          name="status"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="color">Color</label>
+        <input
+          type="text"
+          class="form-control"
+          id="color"
+          [(ngModel)]="currentUser.color"
+          name="color"
+          required
+        />
+      </div>
+      <button type="submit" class="btn btn-primary">
+        {{ isEditMode ? "Update" : "Add" }}
+      </button>
+    </form>
+  </c-modal-body>
+</c-modal>
+
+<!-- Delete User Confirmation Modal -->
+<c-modal
+  [visible]="isDeleteModalOpen"
+  (visibleChange)="handleDeleteModalChange($event)"
+>
+  <c-modal-header>
+    <h5 cModalTitle>Confirm Delete</h5>
+    <button (click)="closeDeleteModal()" cButtonClose></button>
+  </c-modal-header>
+  <c-modal-body>
+    <p>Are you sure you want to delete {{ currentUser.name }}?</p>
+  </c-modal-body>
+  <c-modal-footer>
+    <button class="btn btn-danger" (click)="confirmDeleteUser()">Delete</button>
+    <button class="btn btn-secondary" (click)="closeDeleteModal()">
+      Cancel
+    </button>
+  </c-modal-footer>
+</c-modal>

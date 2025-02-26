@@ -115,5 +115,14 @@ export const routes: Routes = [
       title: 'New Page',
     },
   },
+  {
+    path: 'user-management',
+    component: DefaultLayoutComponent,
+    loadChildren: () =>
+      import('./views/user-management/routes').then((m) => m.routes),
+    data: {
+      title: 'User Management Page',
+    },
+  },
   { path: '**', redirectTo: 'dashboard' },
 ];
