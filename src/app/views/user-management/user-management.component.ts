@@ -14,6 +14,9 @@ import {
   ModalFooterComponent,
   CardFooterComponent,
   ButtonCloseDirective,
+  PaginationComponent,
+  PageItemComponent,
+  PageLinkDirective,
 } from '@coreui/angular';
 import { IconDirective } from '@coreui/icons-angular';
 import { IUser } from '../../models/user.model';
@@ -38,6 +41,9 @@ import { CommonModule } from '@angular/common';
     FormsModule,
     CommonModule,
     ButtonCloseDirective,
+    PaginationComponent,
+    PageItemComponent,
+    PageLinkDirective,
   ],
   templateUrl: './user-management.component.html',
   styleUrl: './user-management.component.scss',
@@ -48,11 +54,29 @@ export class UserManagementComponent implements OnInit {
   public isEditMode = false;
   public isDeleteModalOpen = false;
   public currentUser: IUser = this.initializeUser();
+  public currentPage = 1;
+  public pageSize = 5;
+  public totalUsers = 0;
+  public filters = {
+    name: '',
+    country: '',
+    status: '',
+  };
 
   constructor(private userService: UserService) {}
 
   ngOnInit(): void {
-    this.users = this.userService.getUsers();
+    this.loadUsers();
+  }
+
+  loadUsers(): void {
+    const result = this.userService.getUsers(
+      this.currentPage,
+      this.pageSize,
+      this.filters
+    );
+    this.users = result.users;
+    this.totalUsers = result.total;
   }
 
   openAddUserModal(): void {
@@ -90,19 +114,19 @@ export class UserManagementComponent implements OnInit {
 
   addUser(): void {
     this.userService.addUser(this.currentUser);
-    this.users = this.userService.getUsers();
+    this.loadUsers();
     this.closeModal();
   }
 
   updateUser(): void {
     this.userService.updateUser(this.currentUser.name, this.currentUser);
-    this.users = this.userService.getUsers();
+    this.loadUsers();
     this.closeModal();
   }
 
   confirmDeleteUser(): void {
     this.userService.deleteUser(this.currentUser.name);
-    this.users = this.userService.getUsers();
+    this.loadUsers();
     this.closeDeleteModal();
   }
 
@@ -124,5 +148,30 @@ export class UserManagementComponent implements OnInit {
       status: '',
       color: '',
     };
+  }
+
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.loadUsers();
+  }
+
+  applyFilters(): void {
+    this.currentPage = 1;
+    this.loadUsers();
+  }
+
+  clearFilters(): void {
+    this.filters = {
+      name: '',
+      country: '',
+      status: '',
+    };
+    this.applyFilters();
+  }
+
+  get totalPages(): number[] {
+    return Array(Math.ceil(this.totalUsers / this.pageSize))
+      .fill(0)
+      .map((x, i) => i + 1);
   }
 }

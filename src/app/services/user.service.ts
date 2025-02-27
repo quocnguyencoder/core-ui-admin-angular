@@ -88,8 +88,35 @@ export class UserService {
 
   constructor() {}
 
-  getUsers(): IUser[] {
-    return this.users;
+  getUsers(
+    page: number = 1,
+    pageSize: number = 5,
+    filters: { name?: string; country?: string; status?: string } = {}
+  ): { users: IUser[]; total: number } {
+    let filteredUsers = this.users;
+
+    if (filters.name) {
+      filteredUsers = filteredUsers.filter((user) =>
+        user.name.toLowerCase().includes(filters.name!.toLowerCase())
+      );
+    }
+
+    if (filters.country) {
+      filteredUsers = filteredUsers.filter((user) =>
+        user.country.toLowerCase().includes(filters.country!.toLowerCase())
+      );
+    }
+
+    if (filters.status) {
+      filteredUsers = filteredUsers.filter((user) =>
+        user.status.toLowerCase().includes(filters.status!.toLowerCase())
+      );
+    }
+
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    const paginatedUsers = filteredUsers.slice(startIndex, endIndex);
+    return { users: paginatedUsers, total: filteredUsers.length };
   }
 
   getUser(name: string): IUser | undefined {

@@ -2,9 +2,37 @@
   <c-col xs>
     <c-card class="mb-4">
       <c-card-body>
-        <button class="btn btn-primary mb-3" (click)="openAddUserModal()">
-          Add User
-        </button>
+        <div class="d-flex justify-content-between mb-3">
+          <button class="btn btn-primary" (click)="openAddUserModal()">
+            Add User
+          </button>
+          <div class="d-flex gap-2">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Filter by name"
+              [(ngModel)]="filters.name"
+            />
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Filter by country"
+              [(ngModel)]="filters.country"
+            />
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Filter by status"
+              [(ngModel)]="filters.status"
+            />
+            <button class="btn btn-primary" (click)="applyFilters()">
+              <svg cIcon name="cil-file"></svg>
+            </button>
+            <button class="btn btn-secondary" (click)="clearFilters()">
+              <svg cIcon name="cil-trash"></svg>
+            </button>
+          </div>
+        </div>
         <table
           [hover]="true"
           [responsive]="true"
@@ -85,7 +113,6 @@
                   >
                     Edit
                   </button>
-
                   <button
                     class="btn btn-sm btn-danger"
                     (click)="openDeleteUserModal(user)"
@@ -97,6 +124,22 @@
             </tr>
           </tbody>
         </table>
+        <div class="d-flex justify-content-end">
+          <c-pagination aria-label="Page navigation example" class="mt-2">
+            <c-page-item [disabled]="currentPage === 1">
+              <a cPageLink (click)="onPageChange(currentPage - 1)">Previous</a>
+            </c-page-item>
+            <c-page-item
+              *ngFor="let page of totalPages"
+              [active]="currentPage === page"
+            >
+              <a cPageLink (click)="onPageChange(page)">{{ page }}</a>
+            </c-page-item>
+            <c-page-item [disabled]="currentPage === totalPages.length">
+              <a cPageLink (click)="onPageChange(currentPage + 1)">Next</a>
+            </c-page-item>
+          </c-pagination>
+        </div>
       </c-card-body>
     </c-card>
   </c-col>
