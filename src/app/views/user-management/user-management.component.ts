@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import {
-  CardHeaderComponent,
   CardComponent,
   CardBodyComponent,
   TableDirective,
@@ -13,6 +12,8 @@ import {
   ModalBodyComponent,
   ModalHeaderComponent,
   ModalFooterComponent,
+  CardFooterComponent,
+  ButtonCloseDirective,
 } from '@coreui/angular';
 import { IconDirective } from '@coreui/icons-angular';
 import { IUser } from '../../models/user.model';
@@ -23,6 +24,7 @@ import { CommonModule } from '@angular/common';
   imports: [
     CardComponent,
     CardBodyComponent,
+    CardFooterComponent,
     TableDirective,
     RowComponent,
     ColComponent,
@@ -35,6 +37,7 @@ import { CommonModule } from '@angular/common';
     ModalFooterComponent,
     FormsModule,
     CommonModule,
+    ButtonCloseDirective,
   ],
   templateUrl: './user-management.component.html',
   styleUrl: './user-management.component.scss',

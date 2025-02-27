@@ -104,12 +104,12 @@
 
 <!-- Add/Edit User Modal -->
 <c-modal [visible]="isModalOpen" (visibleChange)="handleModalChange($event)">
-  <c-modal-header>
-    <h5 cModalTitle>{{ isEditMode ? "Edit User" : "Add User" }}</h5>
-    <button (click)="closeModal()" cButtonClose></button>
-  </c-modal-header>
-  <c-modal-body>
-    <form (ngSubmit)="isEditMode ? updateUser() : addUser()">
+  <form (ngSubmit)="isEditMode ? updateUser() : addUser()">
+    <c-modal-header>
+      <h5 cModalTitle>{{ isEditMode ? "Edit User" : "Add User" }}</h5>
+      <button (click)="closeModal()" cButtonClose></button>
+    </c-modal-header>
+    <c-modal-body>
       <div class="form-group">
         <label for="name">Name</label>
         <input
@@ -231,11 +231,14 @@
           required
         />
       </div>
+    </c-modal-body>
+    <c-modal-footer>
+      <button class="btn btn-secondary" (click)="closeModal()">Cancel</button>
       <button type="submit" class="btn btn-primary">
         {{ isEditMode ? "Update" : "Add" }}
       </button>
-    </form>
-  </c-modal-body>
+    </c-modal-footer>
+  </form>
 </c-modal>
 
 <!-- Delete User Confirmation Modal -->
